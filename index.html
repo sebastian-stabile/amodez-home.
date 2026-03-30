@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Amodez Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="logo.png" sizes="32x32">
+<link rel="icon" href="logo.png" sizes="64x64">
+
+<style>
+body{margin:0;font-family:Arial;background:#f2f2f2}
+
+header{
+background:#111;color:#fff;padding:20px;text-align:center;
+font-size:22px;font-weight:bold
+}
+
+.filters{
+position: sticky;
+top: 0;
+z-index: 1000;
+
+display:flex;
+justify-content:center;
+gap:10px;
+padding:10px;
+background:#fff;
+flex-wrap:wrap;
+
+box-shadow: 0 2px 10px rgba(0,0,0,.1);
+}
+
+.filters button{
+padding:8px 15px;border:none;border-radius:20px;
+background:#ddd;cursor:pointer
+}
+
+.filters button.active{background:#25D366;color:#fff}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+gap:15px;padding:15px
+}
+
+.card{
+background:#fff;border-radius:12px;overflow:hidden;
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+transition:.2s
+}
+
+.card:hover{transform:scale(1.03);
+background-color: rgba(212, 210, 210, 0.667);}
+
+.card img{
+width:100%;height:200px;object-fit:contain;
+background:#f8f8f8;padding:10px
+}
+
+.info{padding:10px;text-align:center}
+
+.price{color:#00a650;font-weight:bold}
+
+.desc{font-size:12px;color:#555}
+
+.btn{
+display:block;margin-top:10px;padding:10px;
+background:#25D366;color:#fff;text-decoration:none;
+border-radius:6px
+}
+
+.whatsapp-float{
+position:fixed;bottom:20px;right:20px;
+background:#25D366;color:#fff;
+padding:12px 15px;border-radius:50%;
+text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.2)
+}
+</style>
+</head>
+
+<body>
+
+<header>Amodez Home</header>
+
+<div class="filters">
+<button class="active" onclick="filterProducts('all',event)">Todos</button>
+<button onclick="filterProducts('cocina',event)">Cocina</button>
+<button onclick="filterProducts('limpieza',event)">Limpieza / Baño</button>
+<button onclick="filterProducts('dormitorio',event)">Dormitorio</button>
+<button onclick="filterProducts('herramientas',event)">Herramientas</button>
+<button onclick="filterProducts('accesorios',event)">Accesorios</button>
+</div>
+
+<div class="container" id="products"></div>
+
+<a class="whatsapp-float" href="https://wa.me/541168064435" target="_blank">💬</a>
+
+<script>
+const phone="541168064435";
+
+const products=[
+
+// COCINA
+{name:"Batidora con bowl",price:"$30.500",img:"cocina/batidoraconbowl.jpg",category:"cocina"},
+{name:"Botella Rociadora de Aceite ",price:"$9.000",img:"cocina/aceite.jpg",category:"cocina"},
+{name:"Botella Para Hacer Hielo ",price:"$13.000",img:"cocina/hielo.jpg",category:"cocina"},
+{name:"Bowl cerámica XL",price:"$8.500",img:"cocina/bowl.jpg",category:"cocina"},
+{name:"Bowl Mykonos x6",price:"$40.000",img:"cocina/mybowl.jpg",category:"cocina"},
+{name:"Copas x6 vidrio",price:"$15.000",img:"cocina/copas.jpg",category:"cocina"},
+{name:"Copas Ibiza x6",price:"$30.000",img:"cocina/copasX6.jpg",category:"cocina"},
+{name:"Carro organizador",price:"$53.000",img:"cocina/carro.jpg",category:"cocina"},
+{name:"Destapador vino",price:"$20.000",img:"cocina/vino.jpg",category:"cocina"},
+{name:"Especiero 20 Frascos",price:"$30.000",img:"cocina/exprimidor.jpg",desc:"2 pagos de $20.000", category:"cocina"},
+{name:"Exprimidor Electrico",price:"$20.000",img:"cocina/exprimidor.jpg",category:"cocina"},
+{name:"Exprimidor de Jugo",price:"$48.000",img:"cocina/exprimidorjugo.jpg",category:"cocina"},
+{name:"Freidora 8L Westinghouse",price:"$95.000",img:"cocina/freidora.jpg",desc:"12 funciones.",category:"cocina"},
+{name:"Freidora 5L Eiffel",price:"$74.500",img:"cocina/freidora-eiffel.jpg",desc:"2 pagos de $55.000",category:"cocina"},
+{name:"Freidora 4L",price:"$60.000",img:"cocina/freidoradigital.jpg",category:"cocina"},
+{name:"Freidora 7L Eiffel",price:"$90.000",img:"cocina/freidora-7l.jpg",category:"cocina"},
+{name:"Freidora 10L Dinax",price:"$95.000",img:"cocina/freidora-10l.jpg",desc:"2 pagos de $80.000",category:"cocina"},
+{name:"Frasco bambú",price:"$8.000",img:"cocina/frasco.jpg",category:"cocina"},
+{name:"Horno Electrico",price:"$190.000",img:"cocina/horno.jpg",category:"cocina"},
+{name:"Grifería cocina",price:"$30.000",img:"cocina/grifo.jpg",category:"cocina"},
+{name:"Jarra + vasos",price:"$28.000",img:"cocina/vasosyjarra.jpg",category:"cocina"},
+{name:"Jarra + 4vasos",price:"$21.000",img:"cocina/jarray4vasos.jpg",category:"cocina"},
+{name:"Juego de 3 Piezas",price:"$40.000",img:"cocina/anthiaderente.jpg",desc:"Antiadherente", category:"cocina"},
+{name:"Microondas",price:"$150.000",img:"cocina/microhondas.jpg",category:"cocina"},
+{name:"Molinillo eléctrico",price:"$19.500",img:"cocina/pimentero.jpg",category:"cocina"},
+{name:"Organizadores heladera x10",price:"$36.500",img:"cocina/organizadores.jpg",category:"cocina"},
+{name:"Organizador cocina",price:"$65.000",img:"cocina/organizador.jpg",category:"cocina"},
+{name:"Organizador bacha",price:"$14.500",img:"cocina/bacha.jpg",category:"cocina"},
+{name:"Paellera Electrica",price:"$50.000",img:"cocina/paella.jpg",category:"cocina"},
+{name:"Pava eléctrica",price:"$25.000",img:"cocina/electrica.jpg",category:"cocina"},
+{name:"Pava eléctrica Vidrio",price:"$35.000",img:"cocina/pavavidrio.jpg",category:"cocina"},
+{name:"Pela Papa y Cuchillo",price:"$7.000",img:"cocina/pelapapa.jpg",category:"cocina"},
+{name:"Picador Manual",price:"$12.000",img:"cocina/picador.jpg",category:"cocina"},
+{name:"Picador Cortador de Verduras",price:"$23.500",img:"cocina/cortadordeverduras.jpg",category:"cocina"},
+{name:"Rallador acero",price:"$30.000",img:"cocina/rayador.jpg",category:"cocina"},
+{name:"Rallador Mandolina",price:"$15.000",img:"cocina/ralladormandolina.jpg",category:"cocina"},
+{name:"Rallador Multiuso",price:"$14.500",img:"cocina/rallador.jpg",category:"cocina"},
+{name:"Set Vajilla 18 piezas",price:"$35.000",img:"cocina/platos.jpg",category:"cocina"},
+{name:"Set Cocina Kanji",price:"$60.000",img:"cocina/kanji.jpg",category:"cocina"},
+{name:"Set vasos vintage",price:"$15.000",img:"cocina/vasosvintage.jpg",category:"cocina"},
+{name:"Sandwichera 4 en 1",price:"$50.000",img:"cocina/sanwuchera.jpg",category:"cocina"},
+{name:"Sartén 4 divisiones",price:"$20.000",img:"cocina/sarten.jpg",category:"cocina"},
+{name:"Sartén eléctrica",price:"$35.500",img:"cocina/sartenelectrica.jpg",category:"cocina"},
+{name:"Sandwichera Dinax",price:"$23.000",img:"cocina/oferta.jpg",category:"cocina"},
+{name:"Secaplatos 2 niveles",price:"$25.000",img:"cocina/secaplatos.jpg",category:"cocina"},
+{name:"Secaplatos inox",price:"$34.000",img:"cocina/secaplatosinox.jpg",category:"cocina"},
+{name:"Set de Cocina x9",price:"$60.000",img:"cocina/setx9.jpg",category:"cocina"},
+{name:"Set de Cuchillos 8Piezas",price:"$20.000",img:"cocina/cuchillos.jpg",category:"cocina"},
+{name:"Set Utensillos de Cocina",price:"$20.000",img:"cocina/utensillos.jpg",category:"cocina"},
+{name:"Taza x6",price:"$25.500",img:"cocina/solotaza.jpg",category:"cocina"},
+{name:"Taza + Plato x12",price:"$28.000",img:"cocina/tazayplato.jpg",category:"cocina"},
+{name:"Taza doble vidrio",price:"$6.500",img:"cocina/taza.jpg",category:"cocina"},
+{name:"Taza Ibiza x3",price:"$20.000",img:"cocina/setx3.jpg",category:"cocina"},
+{name:"Taza Ibiza x2",price:"$15.000",img:"cocina/tazaibiza.jpg",category:"cocina"},
+{name:"Tuppers x6",price:"$23.500",img:"cocina/tapers.jpg",category:"cocina"},
+{name:"Tuppers x7",price:"$25.500",img:"cocina/tappers.jpg",category:"cocina"},
+{name:"Tuppers x12",price:"$59.000",img:"cocina/tupers.jpg",category:"cocina"},
+{name:"Vaso Ana",price:"$15.900",img:"cocina/vasoana.jpg",category:"cocina"},
+{name:"Vaso Clear x6",price:"$20.000",img:"cocina/vasoclear.jpg",category:"cocina"},
+{name:"Vaso Con Tapa de Bamboo",price:"$12.000",img:"cocina/vasobamboo.jpg",desc:"2 x $20.000", category:"cocina"},
+{name:"Vasos Ibiza x6",price:"$22.500",img:"cocina/vasosibiza.jpg",category:"cocina"},
+{name:"Yogurtera Westinghouse",price:"$40.000",img:"cocina/yogurtera.jpg",desc:"8 frascos de vidrio. Automática.",category:"cocina"},
+
+
+// LIMPIEZA
+{name:"Aspiradora",price:"$30.000",img:"limpieza_baño/aspiradora.jpg",category:"limpieza"},
+{name:"Alfombra baño",price:"$9.000",img:"limpieza_baño/alfombra.jpg",category:"limpieza"},
+{name:"Carrito 3 niveles",price:"$20.400",img:"limpieza_baño/orcarrito.jpg",category:"limpieza"},
+{name:"Dispenser triple",price:"$30.000",img:"limpieza_baño/dispenser.jpg",category:"limpieza"},
+{name:"Dispenser doble",price:"$22.000",img:"limpieza_baño/dispenserdoble.jpg",category:"limpieza"},
+{name:"Mopa",price:"$16.500",img:"limpieza_baño/mopa.jpg",category:"limpieza"},
+{name:"Mopa centrifuga",price:"$16.800",img:"limpieza_baño/mopadoble.jpg",category:"limpieza"},
+{name:"Mopa centrifuga Doble Balde",price:"$24.500",img:"limpieza_baño/mopa2.jpg",category:"limpieza"},
+{name:"Organizador baño",price:"$22.600",img:"limpieza_baño/orbaño.jpg",category:"limpieza"},
+{name:"Porta cepillos UV",price:"$15.000",img:"limpieza_baño/porta.jpg",category:"limpieza"},
+{name:"Tacho 3L",price:"$15.000",img:"limpieza_baño/tachobasura.jpg",category:"limpieza"},
+{name:"Tacho 5L",price:"$18.000",img:"limpieza_baño/tachobasura5lts.jpg",category:"limpieza"},
+{name:"Tacho Acero + Cepillo 5L",price:"$28.000",img:"limpieza_baño/acero.jpg",category:"limpieza"},
+{name:"Toallas",price:"$12.000",img:"limpieza_baño/toallas.jpg",category:"limpieza"},
+
+
+// DORMITORIO
+{name:"Almohada",price:"$14.000",img:"dormitorio/almohada2.jpg",category:"dormitorio"},
+{name:"Almohada visco",price:"$15.000",img:"dormitorio/almohada.jpg",category:"dormitorio"},
+{name:"Carrito",price:"$23.000",img:"dormitorio/org.jpg",category:"dormitorio"},
+{name:"Corralito",price:"$45.000",img:"dormitorio/hexagonal.jpg",category:"dormitorio"},
+{name:"Organizador Perchero y Zapatero",price:"$20.000",img:"dormitorio/perchero.jpg",category:"dormitorio"},
+{name:"Proyector ",price:"$25.900",img:"dormitorio/proyectorastro.jpg",category:"dormitorio"},
+{name:"Proyector 2",price:"$32.000",img:"dormitorio/proyector.jpg",category:"dormitorio"},
+{name:"Ropero",price:"$35.000",img:"dormitorio/ropero.jpg",category:"dormitorio"},
+{name:"Sabanas KING",price:"$38.500",img:"dormitorio/sabanas.jpg",category:"dormitorio"},
+{name:"Sabanas QUEEN",price:"$35.300",img:"dormitorio/sabanasx3.jpg",category:"dormitorio"},
+{name:"Sabanas FULL",price:"$32.000",img:"dormitorio/sabanasx3.jpg",category:"dormitorio"},
+{name:"Silla Gamer",price:"$130.000",img:"dormitorio/silla.jpg",category:"dormitorio"},
+{name:"Silla bebe",price:"$48.000",img:"dormitorio/sillabebe.jpg",category:"dormitorio"},
+{name:"Zapatero 3",price:"$10.500",img:"dormitorio/zapatero.jpg",category:"dormitorio"},
+{name:"Zapatero 5",price:"$13.600",img:"dormitorio/zapatero5.jpg",category:"dormitorio"},
+
+
+// HERRAMIENTAS
+{name:"Atornilladora",price:"$55.000",img:"herramientas/atornilladora.jpg",category:"herramientas"},
+{name:"Amoladora",price:"$35.000",img:"herramientas/amoladora.jpg",category:"herramientas"},
+{name:"Caja Herramietnas",price:"$200.000",img:"herramientas/cajaherramientas499.jpg", desc:"499 piezas.",category:"herramientas"},
+{name:"Hidrolavadora 1500",price:"$109.000",img:"herramientas/hidro.jpg",category:"herramientas"},
+{name:"Hidrolavadora 2000",price:"$114.000",img:"herramientas/hidro2.jpg",category:"herramientas"},
+{name:"Juego 82p",price:"$44.500",img:"herramientas/cajaherramientas.jpg",category:"herramientas"},
+{name:"Juego 108p",price:"$45.000",img:"herramientas/herramientasazul.jpg",category:"herramientas"},
+{name:"Motosierra",price:"$115.000",img:"herramientas/moto.jpg",category:"herramientas"},
+{name:"Pistola calor",price:"$27.500",img:"herramientas/pistola.jpg",category:"herramientas"},
+{name:"Set tubos",price:"$12.500",img:"herramientas/tubos.jpg",category:"herramientas"},
+{name:"Sierra circular",price:"$62.000",img:"herramientas/circular.jpg",category:"herramientas"},
+{name:"Soldadora",price:"$123.500",img:"herramientas/soldadora.jpg",category:"herramientas"},
+{name:"Taladro",price:"$65.000",img:"herramientas/taladro.jpg",category:"herramientas"},
+
+
+// ACCESORIOS
+{name:"Afeitadora",price:"$25.000",img:"accesorios/afeitadora.jpg",category:"accesorios"},
+{name:"Afeitadora Corporal",price:"$25.000",img:"accesorios/corporal.jpg",category:"accesorios"},
+{name:"Auriculares Inalambricos",price:"$10.000",img:"accesorios/auris.jpg",desc:"2 x $18.000", category:"accesorios"},
+{name:"Auriculares Vincha BT",price:"$12.000",img:"accesorios/aurisvincha.jpg", category:"accesorios"},
+{name:"Auriculares Oreja Gatito",price:"$12.500",img:"accesorios/gato.jpg", category:"accesorios"},
+{name:"Bici fija",price:"$120.000",img:"accesorios/cletafija.jpg",category:"accesorios"},
+{name:"Botella Deportiva",price:"$16.500",img:"accesorios/botella.jpg",category:"accesorios"},
+{name:"Caja Para Armar Pulseras",price:"$12.000",img:"accesorios/pulceras.jpg",category:"accesorios"},
+{name:"Canasto Ropa",price:"$16.000",img:"accesorios/canasto.jpg",category:"accesorios"},
+{name:"Camara de Seguridad",price:"$25.000",img:"accesorios/camaraseguridad.jpg",category:"accesorios"},
+{name:"Camara de Seguridad x4",price:"$125.000",img:"accesorios/seguridadx4.jpg",category:"accesorios"},
+{name:"Carrito Compras",price:"$18.000",img:"accesorios/carritocompras.jpg",category:"accesorios"},
+{name:"Cepillo Deslanador Perro",price:"$12.000",img:"accesorios/cepillo.jpg",category:"accesorios"},
+{name:"Combo Matero",price:"$35.000",img:"accesorios/combo.jpg",category:"accesorios"},
+{name:"Cortadora de Barba",price:"$45.000",img:"accesorios/barba.jpg",category:"accesorios"},
+{name:"Depiladora",price:"$51.000",img:"accesorios/depilador.jpg",category:"accesorios"},
+{name:"Guante Saca Pelusa",price:"$12.000",img:"accesorios/cepillogato.jpg",category:"accesorios"},
+{name:"Juguete Bailarin",price:"$12.000",img:"accesorios/bailar.jpg",category:"accesorios"},
+{name:"Joyas de Plastico",price:"$8.000",img:"accesorios/joyasplastico.jpg",category:"accesorios"},
+{name:"Humificador",price:"$12.000",img:"accesorios/humificador.jpg",category:"accesorios"},
+{name:"Humificador 2",price:"$19.500",img:"accesorios/humificador2.jpg",category:"accesorios"},
+{name:"Humificador 3",price:"$20.000",img:"accesorios/humificador3.jpg",category:"accesorios"},
+{name:"Kit Peluqueria",price:"$25.000",img:"accesorios/barberia.jpg",category:"accesorios"},
+{name:"Kit Pasteleria",price:"$15.900",img:"accesorios/kitpasteleria.jpg",desc:"83P", category:"accesorios"},
+{name:"Kit Reposteria",price:"$25.000",img:"accesorios/repo.jpg",category:"accesorios"},
+{name:"Linterna",price:"$30.000",img:"accesorios/huellitas.jpg",category:"accesorios"},
+{name:"Luz Emergencia 60",price:"$14.500",img:"accesorios/luzemergencia2.jpg",category:"accesorios"},
+{name:"Luz Emergencia 30",price:"$8.900",img:"accesorios/luzemergencia1.jpg",category:"accesorios"},
+{name:"Luz Trabajo",price:"$25.000",img:"accesorios/luztrabajo.jpg",category:"accesorios"},
+{name:"Marcadores",price:"$40.000",img:"accesorios/marcadores.jpg",category:"accesorios"},
+{name:"Masajeador",price:"$24.000",img:"accesorios/rostro.jpg",category:"accesorios"},
+{name:"Masajeador Sculptor",price:"$20.000",img:"accesorios/masajeador.jpg",category:"accesorios"},
+{name:"Microfono Corbatero",price:"$9.500",img:"accesorios/microfono.jpg",category:"accesorios"},
+{name:"Organizador Asiento Trasero",price:"$16.500",img:"accesorios/asiento.jpg",desc:"2 x $30.000", category:"accesorios"},
+{name:"Paraguas",price:"$13.000",img:"accesorios/paragua.jpg",category:"accesorios"},
+{name:"Parlante Inalambrico",price:"$100.000",img:"accesorios/parlante.jpg",desc:"2 pagos de $60.000", category:"accesorios"},
+{name:"Plancha",price:"$26.000",img:"accesorios/plancha.jpg",category:"accesorios"},
+{name:"Planchita de Pelo Mini",price:"$12.500",img:"accesorios/planchita.jpg", category:"accesorios"},
+{name:"Plancha de Pelo ",price:"$16.500",img:"accesorios/planchapelo.jpg", category:"accesorios"},
+{name:"Plancha de Pelo OSR",price:"$20.000",img:"accesorios/osr.jpg", category:"accesorios"},
+{name:"Quencher 1.2L",price:"$19.500",img:"accesorios/quencher.jpg", category:"accesorios"},
+{name:"Rascador Autoadhesivo",price:"$15.000",img:"accesorios/rascador.jpg",category:"accesorios"},
+{name:"Reflector",price:"$26.000",img:"accesorios/reflector.jpg",category:"accesorios"},
+{name:"Reflector Solar Led",price:"$14.500",img:"accesorios/ledsolar.jpg",category:"accesorios"},
+{name:"Repetidor Wifi",price:"$15.000",img:"accesorios/repetidor.jpg",category:"accesorios"},
+{name:"Set arte",price:"$27.000",img:"accesorios/arte.jpg",category:"accesorios"},
+{name:"Set de Reposteria ",price:"$45.000",img:"accesorios/reposteria.jpg",desc:"236P", category:"accesorios"},
+{name:"Set Mancuernas 15Kg",price:"$40.000",img:"accesorios/gym.jpg",category:"accesorios"},
+{name:"Secador de Pelo",price:"$20.000",img:"accesorios/arte.jpg",category:"accesorios"},
+{name:"Teclado y Mouse Inalambrico",price:"$15.000",img:"accesorios/teclado.jpg",category:"accesorios"},
+{name:"Velador",price:"$20.000",img:"accesorios/velador.jpg",category:"accesorios"},
+];
+
+const container=document.getElementById("products");
+
+function renderProducts(filter){
+container.innerHTML=products
+.filter(p=>filter==="all"||p.category===filter)
+.map(p=>{
+const message=`Hola! Quiero comprar: ${p.name} ${p.price}`;
+const link=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+return `
+<div class="card">
+<img src="${p.img}">
+<div class="info">
+<h3>${p.name}</h3>
+<p class="price">${p.price}</p>
+${p.desc?`<p class="desc">${p.desc}</p>`:""}
+<a class="btn" href="${link}" target="_blank">Comprar por WhatsApp </a>
+</div>
+</div>`;
+}).join("");
+}
+
+function filterProducts(category,e){
+document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+e.target.classList.add("active");
+renderProducts(category);
+}
+
+renderProducts("all");
+</script>
+
+</body>
+</html>
